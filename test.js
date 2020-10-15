@@ -1,6 +1,6 @@
 
 
-var likesArray = [{'username': 'alex'}, {'username': 'hej', 'likes': ['berda', 'hanne']}]
+var arrayLikes = [{'username': 'alex'}, {'username': 'hej', 'likes': ['berda', 'hanne']}]
 
 var array = ['hej', 'med', ['a','b','c'],'dig'];
 

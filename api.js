@@ -1,11 +1,44 @@
+/* 
+Note til mig selv:
+- Lav Image og klasser færdigt
+- Ryd op i koden og gør det mere overskueligt
+- Lav responds til at starte med i endspoint så man ved, hvad man skal skrive
+- Lav HTML fejl status sende
+- Rapport
+*/
+
+
 //Initialize
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const bodyParser = require('body-parser'); //For HTTP body-request
 const app = express();
 const port  = 3000;
 
 app.use(bodyParser.json());
+
+var arrayUsers = [{
+    username: 'Alex',
+    password: '1234',
+    gender: 'male',
+    paymentUser: false
+},
+{
+    username: "Hanne",
+    password: "12345",
+    gender: "female",
+    paymentUser: false
+}];
+
+var arrayInterests = [{username: 'Alex', interest: 'I like cake'}];
+
+var arrayLikes = [
+    {username: 'Alex', likes: ['Hanne', 'Sanne']},
+    {username: 'Hanne', likes: ['Berda', 'Alex']}
+];
+
+var arrayMatch = [];
 
 //Classes
 
@@ -38,32 +71,47 @@ class Image {
 
 };
 
+//Login and authentication
+
+app.post('/login', (req, res) => {
+    const {username, password} = req.body;
+    const user = arrayUsers.find(u => {return u.username === username && u.password === password});
+
+    if (user) {let privateKey = fs.readFileSync('./private.pem', 'utf8');
+    let token = jwt.sign({username: user.username}, privateKey, {algorithm: 'HS256'});
+    res.send(token);
+    } else {
+        res.send('Your username or password is incorrect. You can also signup')
+    }
+});
+
+function isAuth(req, res, next) {
+    if (typeof req.headers.authorization !== "undefined") {
+        let token = req.headers.authorization;
+        let privateKey = fs.readFileSync('./private.pem', 'utf8');
+        
+        //Token validation
+        jwt.verify(token, privateKey, {algorithm: "HS256"}, (err, decoded) => {
+            //If an error occured
+            if (err) {
+                res.status(500).json({ error: "Ikke godkendt"});
+                throw new Error("Ikke godkendt dog");
+            }
+            console.log(decoded)
+            return next();
+        });
+    } else {
+        res.status(500).json({ error: "Undefined fejl :(. Husk at sætte key til authentification"});
+        console.log(req.headers.authorization);
+        throw new Error("Undefined fejl dog");
+    };
+};
+
 //HTTP
 
-var arrayUsers = [{
-    username: 'Alex',
-    password: '1234',
-    gender: 'male',
-    paymentUser: false
-},
-{
-    username: "Hanne",
-    password: "1234",
-    gender: "female",
-    paymentUser: false
-}];
-
-var arrayInterests = [{username: 'Alex', interest: 'I like cake'}];
-
-var arrayLikes = [
-    {username: 'Alex', likes: ['Hanne', 'Sanne']},
-    {username: 'Hanne', likes: ['Berda', 'Alex']}
-];
-
-var arrayMatch = [];
-
-app.post('/users', (req, res) => {
+app.post('/signup', (req, res) => {
     //Validere, om der er et username.
+    res.send('To sign up, give username, password, gender and if you want: creditcard')
     let user;
 
     if (req.body.username == undefined) {
@@ -103,7 +151,7 @@ app.post('/users', (req, res) => {
 
 });
 
-app.delete('/users', (req, res) => {
+app.delete('/users', isAuth, (req, res) => {
 
     //Validates if the user exists or not
     const user = arrayUsers.find(u => {return u.username === req.body.username})
@@ -121,19 +169,19 @@ app.delete('/users', (req, res) => {
     res.send('User deleted')
 })
 
-app.get('/users', (req, res) => {
+app.get('/users', isAuth, (req, res) => {
     res.json(arrayUsers);
     //Not done yet
 })
 
 //Interest endpoint
 
-app.get('/interest', (req, res) => {
+app.get('/interest', isAuth, (req, res) => {
     res.send(arrayInterests);
     //Not done yet
 })
 
-app.post('/interest', (req, res) => {
+app.post('/interest', isAuth, (req, res) => {
     let user = arrayUsers.find(u => {return u.username === req.body.username})
     if (!user) {
         res.send('User do not exists. Cannot create interest');
@@ -148,7 +196,7 @@ app.post('/interest', (req, res) => {
 });
 
 
-app.delete('/interest', (req, res) => {
+app.delete('/interest', isAuth, (req, res) => {
     //Validates if the user exists or not
     const user = arrayUsers.find(u => {return u.username === req.body.username})
     if (!user) {
@@ -163,12 +211,12 @@ app.delete('/interest', (req, res) => {
 
 //Match
 
-app.get('/likes', (req, res)=> {
+app.get('/likes', isAuth, (req, res)=> {
     res.send(arrayLikes);
     //Not done yet
 })
 
-app.post('/likes', (req, res)=> {
+app.post('/likes', isAuth, (req, res)=> {
     const user = arrayUsers.find(u => {return u.username === req.body.username})
     if (!user) {
         res.send('User do not exist');
@@ -186,7 +234,7 @@ app.post('/likes', (req, res)=> {
 });
 
 //IMPORTANT: DOESN'T WORK OPTIMAL, NEED FIX
-app.delete('/likes', (req, res)=> {
+app.delete('/likes', isAuth, (req, res)=> {
     const user = arrayLikes.find(u => {return u.username === req.body.username})
     if (!user) {
         res.send('User do not exist or has liked anyone yet');
@@ -212,10 +260,11 @@ app.delete('/likes', (req, res)=> {
 
 //Match
 
-app.get('/match', (req, res) => {
+app.get('/match', isAuth, (req, res) => {
     res.send(arrayMatch);
 })
 
+//Not totally done, therefore no authentification yet.
 app.post('/match', (req, res) => {
     const user = arrayUsers.find(u => {return u.username === req.body.username})
     const matchUser = arrayLikes.find(u => {return u.username === req.body.matchUser})
@@ -256,7 +305,75 @@ app.post('/match', (req, res) => {
     
 });
 
+//Login-system v1
+/*
+app.post('/login', (req, res) => {
+    const {username, password } = req.body;
+    const user = arrayUsers.find(u => {return u.username === username && u.password === password});
+
+    if (user) {
+        const accessToken = jwt.sign({ username: user.username}, privateKey, { algorithm: "HS256" });
+        res.json({accessToken});
+    } else {
+        res.send('Your username or password is incorrect')
+    }
+});
+
+//Authentification function
+function isAuth(req, res, next) {
+    if (typeof req.headers.authorization !== "undefined") {
+        let token = req.headers.authorization;
+
+        //Token validation
+        jwt.verify(token, privateKey, { algorithm: "HS256"}, (err, decoded) => {
+            //If an error occured
+            if (err) {
+                res.status(500).json({ error: "Ikke godkendt"});
+                throw new Error("Ikke godkendt dog");
+            }
+            console.log(decoded)
+            return next();
+        });
+    } else {
+        res.status(500).json({ error: "Undefined fejl :("});
+        console.log(req.headers.authorization);
+        throw new Error("Undefined fejl dog");
+    };
+};
 
 
+/*
+app.post('/token', (req, res) => {
+    const { token } = req.body;
+
+    if (!token) {
+        return res.send('Fejl token1');
+    };
+    
+    if (!refreshToken.includes(token)) {
+        return res.send('Fejl token2');
+    };
+
+    jwt.verify(token, refreshTokenSecret, (err, user) => {
+        if (err) {
+            return res.send('Error i token secret');
+        };
+
+        const accessToken = jwt.sign({username: user.username}, accessToken, {expiresIn: '20m'});
+        
+        res.json({
+            accessToken
+        });
+    });
+
+});
+
+app.post('/logout', (req, res) => {
+    const { token } = req.body;
+    refreshTokens = refreshTokens.filter(token => t !== token);
+
+    res.send('You logout good :))')
+})
+*/
 
 app.listen(port, ()=> console.log('server on port 3000'));
