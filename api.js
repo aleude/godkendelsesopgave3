@@ -43,7 +43,7 @@ var users = [{
     paymentUser: false
 }];
 
-var usersInterest = [{username: 'alex', interest: 'I like Apple'}];
+var usersInterest = [{username: 'alex', interest: 'I like cake'}];
 
 
 
@@ -147,7 +147,12 @@ app.delete('/interest', (req, res) => {
     res.send('Your interest is deleted')
 })
 
+//Match
 
+app.get('/match', (req, res)=> {
+    
+
+});
 
 
 app.listen(port, ()=> console.log('server on port 3000'));
