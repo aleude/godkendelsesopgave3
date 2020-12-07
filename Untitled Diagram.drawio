@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-07T21:15:10.502Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15" etag="6XHuBSRlII3JN62jYwN9" version="13.9.8" type="github" pages="7">
+<mxfile host="app.diagrams.net" modified="2020-12-07T21:16:13.497Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.1 Safari/605.1.15" etag="b5yeGCWdi1Xq8Y0zEC5y" version="13.9.8" type="github" pages="7">
   <diagram id="MIZSV_a9kjiavPeGqr3Y" name="MVC real">
     <mxGraphModel dx="1298" dy="865" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -876,6 +876,18 @@
         </mxCell>
         <mxCell id="dj7a359N9e0lTOL6UGZF-53" value="Sequence Diagram processing a like-request " style="text;align=center;fontStyle=1;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=15;" vertex="1" parent="Du-c1cY26iVatKTVK_DW-1">
           <mxGeometry x="240" y="190" width="80" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="dj7a359N9e0lTOL6UGZF-56" value="User" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" vertex="1" parent="Du-c1cY26iVatKTVK_DW-1">
+          <mxGeometry x="90" y="230" width="80" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="dj7a359N9e0lTOL6UGZF-57" value="View" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" vertex="1" parent="Du-c1cY26iVatKTVK_DW-1">
+          <mxGeometry x="280" y="230" width="80" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="dj7a359N9e0lTOL6UGZF-58" value="Controller" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" vertex="1" parent="Du-c1cY26iVatKTVK_DW-1">
+          <mxGeometry x="470" y="230" width="80" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="dj7a359N9e0lTOL6UGZF-59" value="Model" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=13;" vertex="1" parent="Du-c1cY26iVatKTVK_DW-1">
+          <mxGeometry x="630" y="230" width="80" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
